@@ -1,27 +1,19 @@
-EMI calculation helpers for SmartLoan India.
 
+def calculate_emi(principal, annual_rate, years):
+    """Calculate monthly EMI, total interest and total repayment."""
 
-def calculate_emi(principal, annual_interest_rate, tenure_years):
-    """
-    Calculate monthly EMI, total interest, and total repayment.
-
-    Returns:
-        tuple: (monthly_emi, total_interest, total_payment)
-    """
     principal = float(principal)
-    annual_interest_rate = float(annual_interest_rate)
-    tenure_years = float(tenure_years)
+    annual_rate = float(annual_rate)
+    years = float(years)
 
     if principal < 0:
         raise ValueError("Loan amount cannot be negative.")
-
-    if annual_interest_rate < 0:
+    if annual_rate < 0:
         raise ValueError("Interest rate cannot be negative.")
-
-    if tenure_years <= 0:
+    if years <= 0:
         raise ValueError("Loan tenure must be greater than zero.")
 
-    months = round(tenure_years * 12)
+    months = int(years * 12)
 
     if months <= 0:
         raise ValueError("Loan tenure must be at least one month.")
@@ -29,7 +21,7 @@ def calculate_emi(principal, annual_interest_rate, tenure_years):
     if principal == 0:
         return 0.0, 0.0, 0.0
 
-    monthly_rate = annual_interest_rate / 1200
+    monthly_rate = annual_rate / 1200
 
     if monthly_rate == 0:
         emi = principal / months
@@ -45,18 +37,3 @@ def calculate_emi(principal, annual_interest_rate, tenure_years):
         round(total_interest, 2),
         round(total_payment, 2),
     )
-
-
-if __name__ == "__main__":
-    amount = 500000
-    rate = 10
-    tenure = 5
-
-    emi, interest, total = calculate_emi(amount, rate, tenure)
-
-    print(f"Loan Amount: ₹{amount:,.2f}")
-    print(f"Interest Rate: {rate}% per annum")
-    print(f"Tenure: {tenure} years")
-    print(f"Monthly EMI: ₹{emi:,.2f}")
-    print(f"Total Interest: ₹{interest:,.2f}")
-    print(f"Total Repayment: ₹{total:,.2f}")
