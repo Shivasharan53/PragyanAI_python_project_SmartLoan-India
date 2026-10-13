@@ -1,105 +1,84 @@
 
-BANKS = {
-    "State Bank of India (SBI)": {
-        "website": "https://sbi.co.in/",
-        "products": {
-            "Home Loan": {
-                "purpose": "Eligible home purchase, construction or related housing needs.",
-                "eligibility": "Subject to income, credit profile, property and bank policy.",
-                "documents": "Identity, address, income and property documents, as applicable.",
-                "rate": "Check the current rate on the official bank website.",
-                "url": "https://sbi.co.in/web/personal-banking/loans/home-loans",
-            },
-            "Education Loan": {
-                "purpose": "Eligible higher-education expenses.",
-                "eligibility": "Depends on course, institution, applicant and loan scheme.",
-                "documents": "Admission letter, academic records, identity and financial documents.",
-                "rate": "Check the current rate on the official bank website.",
-                "url": "https://sbi.co.in/web/personal-banking/loans/education-loans",
-            },
-            "Personal Loan": {
-                "purpose": "Eligible personal expenses.",
-                "eligibility": "Depends on income, employment, credit profile and bank policy.",
-                "documents": "Identity, address and income documents, as applicable.",
-                "rate": "Check the current rate on the official bank website.",
-                "url": "https://sbi.co.in/web/personal-banking/loans/personal-loans",
-            },
-            "Vehicle Loan": {
-                "purpose": "Eligible vehicle purchases.",
-                "eligibility": "Depends on income, vehicle type and applicable scheme.",
-                "documents": "Identity, address, income documents and vehicle quotation.",
-                "rate": "Check the current rate on the official bank website.",
-                "url": "https://sbi.co.in/web/personal-banking/loans/auto-loans",
-            },
-        },
-        "insurance_url": "https://sbi.co.in/",
-    },
-    "HDFC Bank": {
-        "website": "https://www.hdfcbank.com/",
-        "products": {
-            "Home Loan": {
-                "purpose": "Eligible home purchase or construction.",
-                "eligibility": "Depends on income, credit profile and property.",
-                "documents": "Identity, address, income and property documents, as applicable.",
-                "rate": "Check the current rate on the official bank website.",
-                "url": "https://www.hdfcbank.com/personal/borrow/popular-loans/home-loan",
-            },
-            "Personal Loan": {
-                "purpose": "Eligible personal expenses.",
-                "eligibility": "Depends on income, employment and credit profile.",
-                "documents": "Identity, address and income documents, as applicable.",
-                "rate": "Check the current rate on the official bank website.",
-                "url": "https://www.hdfcbank.com/personal/borrow/popular-loans/personal-loan",
-            },
-            "Bike / Two-Wheeler Loan": {
-                "purpose": "Explore financing options for eligible two-wheeler purchases.",
-                "eligibility": "Confirm current product availability and conditions with the bank.",
-                "documents": "Requirements depend on the available product and applicant.",
-                "rate": "Check the current rate on the official bank website.",
-                "url": "https://www.hdfcbank.com/",
-            },
-            "Education Loan": {
-                "purpose": "Explore eligible education-financing options.",
-                "eligibility": "Confirm the currently available scheme with the bank.",
-                "documents": "Depends on the product and applicant.",
-                "rate": "Check the current rate on the official bank website.",
-                "url": "https://www.hdfcbank.com/",
-            },
-        },
-        "insurance_url": "https://www.hdfcbank.com/",
-    },
-    "ICICI Bank": {
-        "website": "https://www.icicibank.com/",
-        "products": {
-            "Home Loan": {
-                "purpose": "Eligible home purchase or construction.",
-                "eligibility": "Depends on income, credit profile and property.",
-                "documents": "Identity, address, income and property documents, as applicable.",
-                "rate": "Check the current rate on the official bank website.",
-                "url": "https://www.icicibank.com/personal-banking/loans/home-loan",
-            },
-            "Personal Loan": {
-                "purpose": "Eligible personal expenses.",
-                "eligibility": "Depends on income, employment and credit profile.",
-                "documents": "Identity, address and income documents, as applicable.",
-                "rate": "Check the current rate on the official bank website.",
-                "url": "https://www.icicibank.com/personal-banking/loans/personal-loan",
-            },
-            "Education Loan": {
-                "purpose": "Eligible higher-education expenses.",
-                "eligibility": "Depends on course, institution and scheme availability.",
-                "documents": "Admission, academic, identity and financial documents, as applicable.",
-                "rate": "Check the current rate on the official bank website.",
-                "url": "https://www.icicibank.com/",
-            },
-            "Bike / Two-Wheeler Loan": {
-                "purpose": "Explore current vehicle-financing options.",
-                "eligibility": "Confirm product availability with the bank.",
-                "documents": "Depends on the available product.",
-                "rate": "Check the current rate on the official bank website.",
-                "url": "https://www.icicibank.com/",
-            },
-        },
-        "insurance_url": "https://www.icicibank.com/",
-    },
-}
+# ==========================================================
+# HELPER FUNCTIONS FOR SMARTLOAN INDIA
+# ==========================================================
+
+def get_amount_text(product_data):
+    """Return the available loan amount as readable text."""
+    if not isinstance(product_data, dict):
+        return "Amount details unavailable"
+
+    amount_text = product_data.get("amount_text")
+    if amount_text:
+        return amount_text
+
+    min_amount = product_data.get("min_amount")
+    max_amount = product_data.get("max_amount")
+
+    if min_amount is not None and max_amount is not None:
+        return f"₹{min_amount:,.0f} – ₹{max_amount:,.0f}"
+
+    if max_amount is not None:
+        return f"Up to ₹{max_amount:,.0f}"
+
+    if min_amount is not None:
+        return f"From ₹{min_amount:,.0f}"
+
+    return "Depends on bank policy and eligibility"
+
+
+def get_rate_text(product_data):
+    """Return the interest rate as readable text."""
+    if not isinstance(product_data, dict):
+        return "Rate unavailable"
+
+    rate_text = product_data.get("rate_text")
+    if rate_text:
+        return rate_text
+
+    interest_rate = product_data.get("interest_rate")
+    if interest_rate is not None:
+        return f"{interest_rate:.2f}% per annum"
+
+    return "Check the official bank website"
+
+
+def get_tenure_text(product_data):
+    """Return the maximum loan tenure as readable text."""
+    if not isinstance(product_data, dict):
+        return "Tenure unavailable"
+
+    max_tenure = product_data.get("max_tenure")
+
+    if max_tenure is not None:
+        years = float(max_tenure)
+        return f"Up to {years:g} years"
+
+    return "Depends on the loan scheme"
+
+
+def get_loan_product(category, bank):
+    """Safely retrieve a loan product for a category and bank."""
+    category_data = LOAN_DATA.get(category, {})
+    product_data = category_data.get(bank)
+
+    if not product_data:
+        return None
+
+    return product_data
+
+
+def get_available_banks(category):
+    """Return banks listed for a particular loan category."""
+    category_data = LOAN_DATA.get(category, {})
+
+    return [
+        bank
+        for bank, details in category_data.items()
+        if details.get("available", True)
+    ]
+
+
+def get_loan_categories():
+    """Return all available loan categories."""
+    return list(LOAN_DATA.keys())
