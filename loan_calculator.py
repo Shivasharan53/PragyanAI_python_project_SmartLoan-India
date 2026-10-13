@@ -1,5 +1,3 @@
-
-"""
 SmartLoan India - EMI Calculator
 
 Calculates:
